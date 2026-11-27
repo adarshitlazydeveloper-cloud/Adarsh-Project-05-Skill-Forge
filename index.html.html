@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SkillForge — Build Skills. Shape Your Future.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;700;800&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+/* ===== Tokens ===== */
+:root{--navy:#101828;--navy2:#1b2640;--purple:#7C3AED;--purple2:#a78bfa;--grad:linear-gradient(135deg,#7C3AED,#C026D3);--bg:#fff;--soft:#f5f3ff;--text:#344054;--muted:#667085;--line:#e4e7ec;--shadow:0 10px 30px rgba(16,24,40,.08);--r:16px}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;color:var(--text);background:var(--bg);line-height:1.6;overflow-x:hidden}
+h1,h2,h3,h4{font-family:'Bricolage Grotesque',sans-serif;color:var(--navy);line-height:1.15}
+a{color:inherit;text-decoration:none}
+section{scroll-margin-top:72px}
+.wrap{max-width:1180px;margin:0 auto;padding:0 22px}
+.sec{padding:88px 0}
+.sec.alt{background:var(--soft)}
+.head{max-width:620px;margin-bottom:42px}
+.head h2{font-size:clamp(1.9rem,4vw,2.7rem);margin-bottom:12px}
+.head p{color:var(--muted)}
+:focus-visible{outline:3px solid var(--purple2);outline-offset:2px}
+/* buttons */
+.btn{display:inline-flex;align-items:center;gap:8px;border:0;cursor:pointer;font:700 1rem 'DM Sans',sans-serif;padding:13px 26px;border-radius:999px;transition:transform .2s,box-shadow .2s,background .2s}
+.btn-p{background:var(--grad);color:#fff;box-shadow:0 8px 20px rgba(124,58,237,.35)}
+.btn-p:hover{transform:translateY(-3px);box-shadow:0 12px 26px rgba(124,58,237,.5)}
+.btn-o{background:transparent;color:#fff;border:2px solid rgba(255,255,255,.4)}
+.btn-o:hover{background:#fff;color:var(--navy);transform:translateY(-3px)}
+.btn-sm{padding:10px 18px;font-size:.9rem}
+.btn-ol{background:#fff;color:var(--purple);border:2px solid var(--purple)}
+.btn-ol:hover{background:var(--purple);color:#fff;transform:translateY(-3px)}
+/* nav */
+nav{position:fixed;top:0;left:0;right:0;z-index:50;transition:background .3s,box-shadow .3s}
+nav.stuck{background:rgba(16,24,40,.96);backdrop-filter:blur(8px);box-shadow:0 4px 20px rgba(0,0,0,.25)}
+.nav-in{display:flex;align-items:center;justify-content:space-between;height:68px}
+.logo{font:800 1.5rem 'Bricolage Grotesque',sans-serif;color:#fff;display:flex;align-items:center;gap:8px}
+.logo i{background:var(--grad);width:34px;height:34px;border-radius:10px;display:grid;place-items:center;font-size:1rem}
+.menu{display:flex;gap:6px;list-style:none;align-items:center}
+.menu a{color:#d0d5dd;padding:8px 13px;border-radius:999px;font-weight:500;font-size:.95rem;transition:.2s}
+.menu a:hover,.menu a.active{color:#fff;background:rgba(124,58,237,.45)}
+.burger{display:none;background:none;border:0;color:#fff;font-size:1.5rem;cursor:pointer}
+/* hero */
+#home{background:radial-gradient(circle at 80% 20%,rgba(124,58,237,.45),transparent 45%),var(--navy);color:#cbd5e1;padding:140px 0 70px}
+.hero{display:grid;grid-template-columns:1.1fr .9fr;gap:40px;align-items:center}
+#home h1{color:#fff;font-size:clamp(2.3rem,5.5vw,4rem);margin-bottom:18px;animation:rise .8s both}
+#home p.lead{font-size:1.1rem;max-width:520px;margin-bottom:28px;animation:rise .8s .12s both}
+.ctas{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:40px;animation:rise .8s .24s both}
+.stats{display:flex;gap:34px;flex-wrap:wrap}
+.stat b{display:block;font:800 2rem 'Bricolage Grotesque',sans-serif;color:#fff}
+.stat span{font-size:.9rem}
+.tag{display:inline-block;background:rgba(124,58,237,.25);color:#ddd6fe;padding:6px 14px;border-radius:999px;font-size:.85rem;margin-bottom:18px}
+.art{animation:float 5s ease-in-out infinite}
+@keyframes float{50%{transform:translateY(-12px)}}
+@keyframes rise{from{opacity:0;transform:translateY(24px)}}
+/* course filters + cards */
+.filters{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:30px}
+.fbtn{border:1.5px solid var(--line);background:#fff;padding:9px 20px;border-radius:999px;cursor:pointer;font:500 .95rem 'DM Sans',sans-serif;color:var(--text);transition:.2s}
+.fbtn:hover{border-color:var(--purple);color:var(--purple)}
+.fbtn.active{background:var(--grad);color:#fff;border-color:transparent}
+.grid3{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:24px}
+.card{background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:26px;box-shadow:var(--shadow);transition:transform .3s,box-shadow .3s,opacity .25s}
+.card:hover{transform:translateY(-6px);box-shadow:0 18px 40px rgba(124,58,237,.18)}
+.course.out{opacity:0;transform:scale(.94)}
+.course[hidden]{display:none}
+.ico{width:56px;height:56px;border-radius:14px;background:var(--grad);color:#fff;display:grid;place-items:center;font-size:1.4rem;margin-bottom:16px}
+.course h3{font-size:1.25rem;margin-bottom:8px}
+.course p{color:var(--muted);font-size:.95rem;margin-bottom:14px}
+.meta{display:flex;gap:14px;flex-wrap:wrap;font-size:.85rem;color:var(--muted);margin-bottom:18px}
+.meta i{color:var(--purple);margin-right:4px}
+.cfoot{display:flex;align-items:center;justify-content:space-between}
+.price{font:800 1.4rem 'Bricolage Grotesque',sans-serif;color:var(--navy)}
+/* accordion */
+.acc{max-width:820px}
+.mod{border:1px solid var(--line);border-radius:var(--r);margin-bottom:14px;background:#fff;overflow:hidden}
+.mod button{width:100%;display:flex;justify-content:space-between;align-items:center;gap:12px;padding:20px 24px;background:none;border:0;cursor:pointer;font:700 1.1rem 'Bricolage Grotesque',sans-serif;color:var(--navy);text-align:left}
+.mod button i{color:var(--purple);transition:transform .3s}
+.mod.open{border-color:var(--purple);box-shadow:var(--shadow)}
+.panel{max-height:0;overflow:hidden;transition:max-height .35s ease}
+.panel ul{list-style:none;padding:0 24px 20px}
+.panel li{padding:9px 0;border-top:1px dashed var(--line)}
+.panel li i{color:var(--purple);margin-right:10px}
+/* mentors */
+.mentor{text-align:center}
+.av{width:92px;height:92px;border-radius:50%;margin:0 auto 14px;display:grid;place-items:center;color:#fff;font:800 1.9rem 'Bricolage Grotesque',sans-serif;box-shadow:0 0 0 5px var(--soft);transition:transform .3s}
+.mentor:hover .av{transform:scale(1.08) rotate(-4deg)}
+.mentor .role{color:var(--purple);font-weight:700;font-size:.95rem}
+.mentor .exp{font-size:.85rem;color:var(--muted);margin-bottom:10px}
+.mentor p{font-size:.92rem;color:var(--muted);margin-bottom:14px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-bottom:14px}
+.chips span{background:var(--soft);color:var(--purple);font-size:.78rem;font-weight:700;padding:4px 10px;border-radius:999px}
+.soc a{display:inline-grid;place-items:center;width:36px;height:36px;border-radius:50%;background:var(--navy);color:#fff;margin:0 4px;transition:.2s}
+.soc a:hover{background:var(--purple);transform:translateY(-3px)}
+/* testimonials */
+.stars{color:#f59e0b;margin-bottom:10px}
+.quote{font-size:.98rem;margin-bottom:18px}
+.who{display:flex;gap:12px;align-items:center}
+.who .av{width:50px;height:50px;font-size:1.1rem;margin:0;box-shadow:none}
+.who small{display:block;color:var(--muted)}
+.band{margin-top:44px;background:var(--navy);border-radius:var(--r);padding:34px;display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:20px;text-align:center}
+.band b{display:block;font:800 2.3rem 'Bricolage Grotesque',sans-serif;color:#fff}
+.band span{color:#cbd5e1}
+/* pricing */
+.plan{position:relative;display:flex;flex-direction:column}
+.plan.pop{border:2px solid var(--purple);transform:scale(1.04);box-shadow:0 20px 50px rgba(124,58,237,.28)}
+.plan.pop:hover{transform:scale(1.04) translateY(-6px)}
+.badge{position:absolute;top:-14px;left:50%;transform:translateX(-50%);background:var(--grad);color:#fff;font-size:.8rem;font-weight:700;padding:5px 16px;border-radius:999px}
+.plan h3{font-size:1.3rem}
+.plan .price{font-size:2.4rem;margin:8px 0 18px}
+.plan ul{list-style:none;margin-bottom:24px;flex:1}
+.plan li{padding:6px 0}
+.plan li i{color:var(--purple);margin-right:9px}
+/* form */
+.formbox{max-width:760px;margin:70px auto 0;background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:36px;box-shadow:var(--shadow);scroll-margin-top:90px}
+.formbox h3{font-size:1.6rem;margin-bottom:6px}
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:22px}
+.full{grid-column:1/-1}
+label{display:block;font-weight:700;font-size:.9rem;margin-bottom:6px;color:var(--navy)}
+input[type=text],input[type=email],input[type=tel],select,textarea{width:100%;padding:12px 14px;border:1.5px solid var(--line);border-radius:10px;font:1rem 'DM Sans',sans-serif;background:#fff;transition:border .2s,box-shadow .2s}
+input:focus,select:focus,textarea:focus{outline:0;border-color:var(--purple);box-shadow:0 0 0 3px rgba(124,58,237,.2)}
+.bad{border-color:#d92d20!important;background:#fffafa}
+.err{display:block;color:#b42318;font-size:.82rem;min-height:1.1em;margin-top:4px}
+.chk{display:flex;gap:10px;align-items:flex-start;font-weight:400}
+.chk input{margin-top:5px;accent-color:var(--purple)}
+.ok{display:none;margin-top:18px;padding:16px 18px;border-radius:12px;background:#ecfdf3;color:#067647;border:1px solid #abefc6;font-weight:500}
+.ok.show{display:block;animation:rise .4s both}
+/* modal */
+.overlay{position:fixed;inset:0;background:rgba(16,24,40,.7);display:none;align-items:center;justify-content:center;padding:18px;z-index:100;opacity:0;transition:opacity .25s}
+.overlay.show{display:flex}.overlay.fade{opacity:1}
+.modal{background:#fff;border-radius:20px;max-width:640px;width:100%;max-height:90vh;overflow:auto;padding:34px;position:relative;transform:translateY(20px);transition:transform .25s}
+.overlay.fade .modal{transform:none}
+.x{position:absolute;top:14px;right:14px;width:38px;height:38px;border-radius:50%;border:0;background:var(--soft);color:var(--navy);cursor:pointer;font-size:1.1rem;transition:.2s}
+.x:hover{background:var(--purple);color:#fff}
+.modal h3{font-size:1.7rem;margin:6px 40px 10px 0}
+.modal h4{margin:18px 0 8px;font-size:1.05rem}
+.modal ul{padding-left:20px}
+.modal .chips{justify-content:flex-start}
+.mfoot{display:flex;justify-content:space-between;align-items:center;margin-top:24px;gap:12px;flex-wrap:wrap}
+/* misc */
+footer{background:var(--navy);color:#98a2b3;text-align:center;padding:30px 0;font-size:.92rem}
+#top{position:fixed;right:22px;bottom:22px;width:48px;height:48px;border-radius:50%;border:0;background:var(--grad);color:#fff;font-size:1.1rem;cursor:pointer;box-shadow:0 8px 20px rgba(124,58,237,.4);opacity:0;pointer-events:none;transform:translateY(14px);transition:.3s;z-index:60}
+#top.show{opacity:1;pointer-events:auto;transform:none}
+.rv{opacity:0;transform:translateY(26px);transition:opacity .7s,transform .7s}
+.rv.in{opacity:1;transform:none}
+@media(max-width:900px){
+ .hero{grid-template-columns:1fr}.art{max-width:420px;margin:0 auto}
+ .burger{display:block}
+ .menu{position:absolute;top:68px;left:0;right:0;background:var(--navy);flex-direction:column;padding:12px 22px 20px;display:none;align-items:stretch}
+ .menu.open{display:flex}.menu a{display:block}
+ .plan.pop,.plan.pop:hover{transform:none}
+}
+@media(max-width:600px){.sec{padding:64px 0}.fgrid{grid-template-columns:1fr}.formbox{padding:24px 18px}.modal{padding:26px 20px}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}.rv{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+
+<nav id="nav" aria-label="Main navigation">
+ <div class="wrap nav-in">
+  <a href="#home" class="logo"><i class="fa-solid fa-hammer" aria-hidden="true"></i>SkillForge</a>
+  <button class="burger" id="burger" aria-label="Toggle menu" aria-expanded="false"><i class="fa-solid fa-bars"></i></button>
+  <ul class="menu" id="menu">
+   <li><a href="#home">Home</a></li><li><a href="#courses">Courses</a></li><li><a href="#curriculum">Curriculum</a></li>
+   <li><a href="#mentors">Mentors</a></li><li><a href="#stories">Success Stories</a></li><li><a href="#pricing">Pricing</a></li>
+  </ul>
+ </div>
+</nav>
+
+<!-- SECTION 1: HERO -->
+<section id="home">
+ <div class="wrap hero">
+  <div>
+   <span class="tag"><i class="fa-solid fa-bolt"></i> Build Skills. Shape Your Future.</span>
+   <h1>Transform Your Skills. Build Your Future.</h1>
+   <p class="lead">SkillForge is an online technology bootcamp built around careers. Learn from working engineers and designers, build real projects, and get placement support from day one.</p>
+   <div class="ctas">
+    <a href="#courses" class="btn btn-p">Explore Courses <i class="fa-solid fa-arrow-right"></i></a>
+    <a href="#pricing" class="btn btn-o">Join Our Bootcamp</a>
+   </div>
+   <div class="stats">
+    <div class="stat"><b><span class="count" data-to="10000" data-suf="+">0</span></b><span>Students Trained</span></div>
+    <div class="stat"><b><span class="count" data-to="50" data-suf="+">0</span></b><span>Expert Mentors</span></div>
+    <div class="stat"><b><span class="count" data-to="95" data-suf="%">0</span></b><span>Placement Success</span></div>
+   </div>
+  </div>
+  <svg class="art" viewBox="0 0 440 360" role="img" aria-label="Illustration of a code editor with a live class video and progress badge">
+   <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7C3AED"/><stop offset="1" stop-color="#C026D3"/></linearGradient></defs>
+   <rect x="20" y="30" width="330" height="240" rx="18" fill="#1b2640" stroke="#7C3AED" stroke-opacity=".5"/>
+   <circle cx="46" cy="54" r="6" fill="#f87171"/><circle cx="66" cy="54" r="6" fill="#fbbf24"/><circle cx="86" cy="54" r="6" fill="#34d399"/>
+   <g stroke-linecap="round" stroke-width="8"><path d="M44 96h70" stroke="#a78bfa"/><path d="M124 96h110" stroke="#64748b"/><path d="M64 126h120" stroke="#34d399"/><path d="M194 126h60" stroke="#64748b"/><path d="M64 156h50" stroke="#f472b6"/><path d="M124 156h140" stroke="#64748b"/><path d="M44 186h90" stroke="#a78bfa"/><path d="M64 216h160" stroke="#64748b"/><path d="M44 246h40" stroke="#fbbf24"/></g>
+   <rect x="250" y="190" width="170" height="110" rx="16" fill="url(#g)"/>
+   <circle cx="335" cy="236" r="22" fill="#fff" fill-opacity=".25"/><path d="M328 226l16 10-16 10z" fill="#fff"/>
+   <rect x="270" y="274" width="130" height="8" rx="4" fill="#fff" fill-opacity=".35"/><rect x="270" y="274" width="84" height="8" rx="4" fill="#fff"/>
+   <rect x="290" y="14" width="130" height="56" rx="14" fill="#fff"/>
+   <text x="306" y="38" font-family="DM Sans" font-size="12" fill="#667085">Course progress</text>
+   <text x="306" y="58" font-family="Bricolage Grotesque" font-weight="800" font-size="18" fill="#101828">82% complete</text>
+  </svg>
+ </div>
+</section>
+
+<!-- SECTION 2: COURSES -->
+<section id="courses" class="sec">
+ <div class="wrap">
+  <div class="head rv"><h2>Pick the path that fits your goal</h2><p>Six career tracks, each taught live with projects you can show employers.</p></div>
+  <div class="filters rv" id="filters" role="group" aria-label="Filter courses">
+   <button class="fbtn active" data-f="all">All Courses</button><button class="fbtn" data-f="dev">Development</button>
+   <button class="fbtn" data-f="data">Data Science</button><button class="fbtn" data-f="design">Design</button>
+   <button class="fbtn" data-f="marketing">Marketing</button><button class="fbtn" data-f="cloud">Cloud &amp; AI</button>
+  </div>
+  <div class="grid3" id="courseGrid"></div>
+ </div>
+</section>
+
+<!-- SECTION 3: CURRICULUM -->
+<section id="curriculum" class="sec alt">
+ <div class="wrap">
+  <div class="head rv"><h2>What you will learn, module by module</h2><p>Every track follows the same four-stage path, from first principles to a portfolio-ready capstone.</p></div>
+  <div class="acc rv" id="acc"></div>
+ </div>
+</section>
+
+<!-- SECTION 4: MENTORS -->
+<section id="mentors" class="sec">
+ <div class="wrap">
+  <div class="head rv"><h2>Learn from people who do this every day</h2><p>Our mentors work in the industry and teach in small, hands-on cohorts.</p></div>
+  <div class="grid3" id="mentorGrid"></div>
+ </div>
+</section>
+
+<!-- SECTION 5: SUCCESS STORIES -->
+<section id="stories" class="sec alt">
+ <div class="wrap">
+  <div class="head rv"><h2>Graduates who changed careers</h2><p>Real outcomes from learners who started where you are.</p></div>
+  <div class="grid3" id="storyGrid"></div>
+  <div class="band rv">
+   <div><b><span class="count" data-to="10000" data-suf="+">0</span></b><span>Successful Learners</span></div>
+   <div><b><span class="count" data-to="95" data-suf="%">0</span></b><span>Career Success Rate</span></div>
+   <div><b><span class="count" data-to="500" data-suf="+">0</span></b><span>Hiring Partners</span></div>
+  </div>
+ </div>
+</section>
+
+<!-- SECTION 6: PRICING + ENROLLMENT -->
+<section id="pricing" class="sec">
+ <div class="wrap">
+  <div class="head rv"><h2>Choose a plan and start learning</h2><p>One-time fee. No hidden charges.</p></div>
+  <div class="grid3" id="planGrid"></div>
+
+  <form class="formbox rv" id="enroll" novalidate>
+   <h3>Enroll in SkillForge</h3>
+   <p>Fill in your details and our admissions team will contact you within one working day.</p>
+   <div class="fgrid">
+    <div><label for="fName">Full Name *</label><input type="text" id="fName" autocomplete="name"><span class="err"></span></div>
+    <div><label for="fEmail">Email Address *</label><input type="email" id="fEmail" autocomplete="email"><span class="err"></span></div>
+    <div><label for="fPhone">Phone Number *</label><input type="tel" id="fPhone" maxlength="10" inputmode="numeric" placeholder="10-digit mobile number" autocomplete="tel"><span class="err"></span></div>
+    <div><label for="fEdu">Education Level *</label>
+     <select id="fEdu"><option value="">Select education level</option><option>High School</option><option>Diploma</option><option>Bachelor's Degree</option><option>Master's Degree</option><option>Working Professional</option></select><span class="err"></span></div>
+    <div><label for="fCourse">Select Course *</label><select id="fCourse"></select><span class="err"></span></div>
+    <div><label for="fPlan">Select Pricing Plan *</label><select id="fPlan"></select><span class="err"></span></div>
+    <div class="full"><label for="fMsg">Message (optional)</label><textarea id="fMsg" rows="3"></textarea></div>
+    <div class="full"><label class="chk" for="fTerms"><input type="checkbox" id="fTerms"> <span>I agree to the Terms and Conditions and Privacy Policy. *</span></label><span class="err"></span></div>
+    <div class="full"><button type="submit" class="btn btn-p">Submit Enrollment</button></div>
+   </div>
+   <div class="ok" id="ok" role="status"></div>
+  </form>
+ </div>
+</section>
+
+<footer><div class="wrap">© 2026 SkillForge — Build Skills. Shape Your Future.</div></footer>
+
+<!-- Course modal -->
+<div class="overlay" id="overlay">
+ <div class="modal" role="dialog" aria-modal="true" aria-labelledby="mTitle">
+  <button class="x" id="mClose" aria-label="Close course details"><i class="fa-solid fa-xmark"></i></button>
+  <div class="ico" id="mIcon"></div>
+  <h3 id="mTitle"></h3>
+  <p id="mDesc"></p>
+  <div class="meta" style="margin-top:12px"><span><i class="fa-regular fa-clock"></i><b id="mDur"></b></span><span><i class="fa-solid fa-signal"></i><b id="mLvl"></b></span></div>
+  <h4>Skills covered</h4><div class="chips" id="mSkills"></div>
+  <h4>Learning outcomes</h4><ul id="mOut"></ul>
+  <div class="mfoot"><div><small>Course fee</small><div class="price" id="mFee"></div></div><button class="btn btn-p" id="mEnroll">Enroll Now</button></div>
+ </div>
+</div>
+
+<button id="top" aria-label="Back to top"><i class="fa-solid fa-arrow-up"></i></button>
+
+<script>
+/* ===== Data ===== */
+const COURSES=[
+ {id:'fs',cat:'dev',icon:'fa-code',title:'Full Stack Web Development',desc:'Build complete web apps from interface to database using modern tools.',dur:'6 months',lvl:'Beginner',price:24999,skills:['HTML & CSS','JavaScript','React','Node.js','MongoDB','Git'],out:['Build and deploy full-stack apps','Design REST APIs and databases','Ship 4 portfolio projects']},
+ {id:'ds',cat:'data',icon:'fa-chart-line',title:'Data Science & Analytics',desc:'Turn raw data into decisions with Python, statistics and dashboards.',dur:'5 months',lvl:'Intermediate',price:22999,skills:['Python','Pandas','SQL','Statistics','Power BI'],out:['Clean and analyse real datasets','Create interactive dashboards','Present insights to stakeholders']},
+ {id:'ux',cat:'design',icon:'fa-pen-ruler',title:'UI/UX Design',desc:'Research, wireframe and prototype products people enjoy using.',dur:'4 months',lvl:'Beginner',price:17999,skills:['Figma','User Research','Wireframing','Prototyping','Design Systems'],out:['Run user interviews and usability tests','Design responsive app screens','Publish a case-study portfolio']},
+ {id:'ai',cat:'cloud',icon:'fa-brain',title:'Artificial Intelligence & Machine Learning',desc:'Train, evaluate and deploy machine learning models end to end.',dur:'7 months',lvl:'Advanced',price:29999,skills:['Python','scikit-learn','TensorFlow','NLP','Model Deployment'],out:['Train and tune ML models','Build a computer vision or NLP project','Deploy a model behind an API']},
+ {id:'dm',cat:'marketing',icon:'fa-bullhorn',title:'Digital Marketing',desc:'Plan campaigns across search, social and email, and measure results.',dur:'3 months',lvl:'Beginner',price:14999,skills:['SEO','Google Ads','Social Media','Email Marketing','Analytics'],out:['Plan and run a paid campaign','Rank content with SEO','Report ROI with analytics tools']},
+ {id:'cd',cat:'cloud',icon:'fa-cloud',title:'Cloud Computing & DevOps',desc:'Automate, containerise and run applications reliably in the cloud.',dur:'5 months',lvl:'Intermediate',price:26999,skills:['AWS','Docker','Kubernetes','CI/CD','Terraform'],out:['Set up automated deployment pipelines','Run containers at scale','Monitor and secure cloud systems']}
+];
+const MODULES=[
+ ['Module 1: Fundamentals & Foundations',['Introduction to the subject','Core concepts','Tools and setup']],
+ ['Module 2: Intermediate Skills',['Practical concepts','Hands-on exercises','Real-world examples']],
+ ['Module 3: Advanced Learning',['Advanced techniques','Industry best practices','Problem-solving']],
+ ['Module 4: Capstone Project',['Live project development','Portfolio creation','Final assessment']]
+];
+const MENTORS=[
+ {n:'Rahul Sharma',r:'Senior Full Stack Developer',e:'8+ Years Experience',b:'Has built products for fintech and SaaS teams. Teaches clean architecture and shipping on schedule.',s:['React','Node.js','System Design'],c:'#7C3AED,#C026D3'},
+ {n:'Priya Patel',r:'Data Scientist',e:'7+ Years Experience',b:'Builds forecasting and recommendation models. Known for making statistics feel practical.',s:['Python','ML','SQL'],c:'#0ea5e9,#7C3AED'},
+ {n:'Aman Verma',r:'UI/UX Designer',e:'6+ Years Experience',b:'Designs mobile and web products. Coaches students on portfolios and design critiques.',s:['Figma','Research','Prototyping'],c:'#f43f5e,#C026D3'},
+ {n:'Sneha Kapoor',r:'Cloud & DevOps Engineer',e:'9+ Years Experience',b:'Runs large cloud platforms and automates their delivery. Loves teaching reliable infrastructure.',s:['AWS','Docker','Kubernetes'],c:'#10b981,#7C3AED'}
+];
+const STORIES=[
+ {n:'Ananya',r:'Full Stack Developer',co:'NexaTech Solutions',q:'I came in knowing only basic HTML. Six months later I was building and deploying apps, and the mentor reviews got me my first offer.',c:'#7C3AED,#C026D3'},
+ {n:'Rohan',r:'Data Analyst',co:'BrightPath Analytics',q:'The projects used real messy data, so my interviews felt familiar. I now build dashboards that leadership actually uses.',c:'#0ea5e9,#7C3AED'},
+ {n:'Neha',r:'UI/UX Designer',co:'PixelCraft Studio',q:'My case studies came straight from the capstone. Recruiters kept asking about them, and that is what got me hired.',c:'#f43f5e,#C026D3'}
+];
+const PLANS=[
+ {n:'Basic Plan',p:4999,f:['Course access','Recorded video lessons','Learning materials','Community access']},
+ {n:'Pro Plan',p:9999,pop:1,f:['Everything in Basic','Live mentor sessions','Practical assignments','Certificate of completion','Career guidance']},
+ {n:'Premium Plan',p:14999,f:['Everything in Pro','One-to-one mentorship','Live project experience','Resume and portfolio review','Interview preparation','Placement assistance']}
+];
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const inr=n=>'₹'+n.toLocaleString('en-IN');
+const initials=n=>n.split(' ').map(w=>w[0]).join('');
+
+/* ===== Render sections from data ===== */
+$('#courseGrid').innerHTML=COURSES.map(c=>`
+ <article class="card course rv" data-cat="${c.cat}">
+  <div class="ico"><i class="fa-solid ${c.icon}" aria-hidden="true"></i></div>
+  <h3>${c.title}</h3><p>${c.desc}</p>
+  <div class="meta"><span><i class="fa-regular fa-clock"></i>${c.dur}</span><span><i class="fa-solid fa-signal"></i>${c.lvl}</span></div>
+  <div class="cfoot"><span class="price">${inr(c.price)}</span><button class="btn btn-ol btn-sm" data-id="${c.id}">View Details</button></div>
+ </article>`).join('');
+
+$('#acc').innerHTML=MODULES.map((m,i)=>`
+ <div class="mod">
+  <button aria-expanded="false" aria-controls="p${i}">${m[0]}<i class="fa-solid fa-plus" aria-hidden="true"></i></button>
+  <div class="panel" id="p${i}"><ul>${m[1].map(l=>`<li><i class="fa-solid fa-circle-check"></i>${l}</li>`).join('')}</ul></div>
+ </div>`).join('');
+
+$('#mentorGrid').innerHTML=MENTORS.map(m=>`
+ <article class="card mentor rv">
+  <div class="av" style="background:linear-gradient(135deg,${m.c})" role="img" aria-label="Avatar of ${m.n}">${initials(m.n)}</div>
+  <h3>${m.n}</h3><div class="role">${m.r}</div><div class="exp">${m.e}</div><p>${m.b}</p>
+  <div class="chips">${m.s.map(s=>`<span>${s}</span>`).join('')}</div>
+  <div class="soc"><a href="https://www.linkedin.com/" target="_blank" rel="noopener" aria-label="${m.n} on LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a><a href="https://example.com/" target="_blank" rel="noopener" aria-label="${m.n} portfolio"><i class="fa-solid fa-briefcase"></i></a></div>
+ </article>`).join('');
+
+$('#storyGrid').innerHTML=STORIES.map(s=>`
+ <article class="card rv">
+  <div class="stars" role="img" aria-label="5 out of 5 stars">${'<i class="fa-solid fa-star"></i>'.repeat(5)}</div>
+  <p class="quote">“${s.q}”</p>
+  <div class="who"><div class="av" style="background:linear-gradient(135deg,${s.c})" role="img" aria-label="Avatar of ${s.n}">${s.n[0]}</div><div><b>${s.n}</b><small>${s.r}, ${s.co}</small></div></div>
+ </article>`).join('');
+
+$('#planGrid').innerHTML=PLANS.map(p=>`
+ <article class="card plan rv ${p.pop?'pop':''}">
+  ${p.pop?'<span class="badge">Most Popular</span>':''}
+  <h3>${p.n}</h3><div class="price">${inr(p.p)}</div>
+  <ul>${p.f.map(f=>`<li><i class="fa-solid fa-check"></i>${f}</li>`).join('')}</ul>
+  <button class="btn ${p.pop?'btn-p':'btn-ol'}" data-plan="${p.n}">Choose Plan</button>
+ </article>`).join('');
+
+$('#fCourse').innerHTML='<option value="">Select a course</option>'+COURSES.map(c=>`<option value="${c.id}">${c.title}</option>`).join('');
+$('#fPlan').innerHTML='<option value="">Select a plan</option>'+PLANS.map(p=>`<option>${p.n} (${inr(p.p)})</option>`).join('');
+
+/* ===== Navbar: sticky style, mobile toggle, active link ===== */
+const nav=$('#nav'),menu=$('#menu'),burger=$('#burger'),topBtn=$('#top');
+burger.onclick=()=>{const o=menu.classList.toggle('open');burger.setAttribute('aria-expanded',o)};
+$$('a',menu).forEach(a=>a.onclick=()=>{menu.classList.remove('open');burger.setAttribute('aria-expanded',false)});
+const secs=$$('section');
+function onScroll(){
+ const y=scrollY;
+ nav.classList.toggle('stuck',y>40);
+ topBtn.classList.toggle('show',y>600);
+ let cur=secs[0].id;
+ secs.forEach(s=>{if(s.offsetTop-120<=y)cur=s.id});
+ $$('a',menu).forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+cur));
+}
+addEventListener('scroll',onScroll,{passive:true});onScroll();
+topBtn.onclick=()=>scrollTo({top:0,behavior:'smooth'});
+
+/* ===== Reveal on scroll + animated counters ===== */
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.12});
+$$('.rv').forEach(el=>io.observe(el));
+function animateCount(el){
+ const to=+el.dataset.to,suf=el.dataset.suf||'',t0=performance.now(),d=1600;
+ (function step(t){const k=Math.min((t-t0)/d,1),e=1-Math.pow(1-k,3);
+  el.textContent=Math.round(to*e).toLocaleString('en-IN')+suf;if(k<1)requestAnimationFrame(step)})(t0);
+}
+const cio=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){animateCount(e.target);cio.unobserve(e.target)}}),{threshold:.6});
+$$('.count').forEach(el=>cio.observe(el));
+
+/* ===== Course filters (fade out, then hide) ===== */
+$('#filters').onclick=e=>{
+ const b=e.target.closest('.fbtn');if(!b)return;
+ $$('.fbtn').forEach(x=>x.classList.toggle('active',x===b));
+ $$('.course').forEach(c=>{
+  const show=b.dataset.f==='all'||c.dataset.cat===b.dataset.f;
+  clearTimeout(c._t);
+  if(show){c.hidden=false;c.classList.add('in');requestAnimationFrame(()=>c.classList.remove('out'))}
+  else{c.classList.add('out');c._t=setTimeout(()=>c.hidden=true,250)}
+ });
+};
+
+/* ===== Course details modal ===== */
+const ov=$('#overlay');let curCourse=null,lastFocus=null;
+function openModal(id){
+ const c=COURSES.find(x=>x.id===id);curCourse=c;lastFocus=document.activeElement;
+ $('#mIcon').innerHTML=`<i class="fa-solid ${c.icon}"></i>`;
+ $('#mTitle').textContent=c.title;$('#mDesc').textContent=c.desc;
+ $('#mDur').textContent=c.dur;$('#mLvl').textContent=c.lvl;$('#mFee').textContent=inr(c.price);
+ $('#mSkills').innerHTML=c.skills.map(s=>`<span>${s}</span>`).join('');
+ $('#mOut').innerHTML=c.out.map(o=>`<li>${o}</li>`).join('');
+ ov.classList.add('show');requestAnimationFrame(()=>ov.classList.add('fade'));
+ document.body.style.overflow='hidden';$('#mClose').focus();
+}
+function closeModal(){
+ ov.classList.remove('fade');document.body.style.overflow='';
+ setTimeout(()=>ov.classList.remove('show'),250);if(lastFocus)lastFocus.focus();
+}
+$('#courseGrid').onclick=e=>{const b=e.target.closest('[data-id]');if(b)openModal(b.dataset.id)};
+$('#mClose').onclick=closeModal;
+ov.onclick=e=>{if(e.target===ov)closeModal()};
+addEventListener('keydown',e=>{if(e.key==='Escape'&&ov.classList.contains('show'))closeModal()});
+function goToForm(){$('#enroll').scrollIntoView({behavior:'smooth',block:'start'});setTimeout(()=>$('#fName').focus({preventScroll:true}),600)}
+$('#mEnroll').onclick=()=>{$('#fCourse').value=curCourse.id;closeModal();goToForm()};
+
+/* ===== Curriculum accordion (independent open/close) ===== */
+$('#acc').onclick=e=>{
+ const b=e.target.closest('button');if(!b)return;
+ const m=b.parentElement,p=$('.panel',m),open=!m.classList.contains('open');
+ m.classList.toggle('open',open);b.setAttribute('aria-expanded',open);
+ p.style.maxHeight=open?p.scrollHeight+'px':0;
+ const i=$('i',b);i.className='fa-solid '+(open?'fa-minus':'fa-plus');
+};
+
+/* ===== Pricing: Choose Plan fills the form ===== */
+$('#planGrid').onclick=e=>{
+ const b=e.target.closest('[data-plan]');if(!b)return;
+ const opt=[...$('#fPlan').options].find(o=>o.text.startsWith(b.dataset.plan));
+ $('#fPlan').value=opt.value;clearErr($('#fPlan'));goToForm();
+};
+
+/* ===== Enrollment form validation ===== */
+const form=$('#enroll');
+function setErr(el,msg){el.classList.toggle('bad',!!msg);const s=el.closest('div').querySelector('.err');if(s)s.textContent=msg||'';el.setAttribute('aria-invalid',!!msg)}
+function clearErr(el){setErr(el,'')}
+const rules={
+ fName:v=>!v.trim()?'Enter your full name.':v.trim().length<3?'Name must be at least 3 characters.':!/^[A-Za-z .'-]+$/.test(v.trim())?'Use letters only in your name.':'',
+ fEmail:v=>!v.trim()?'Enter your email address.':!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v.trim())?'Enter a valid email, like name@example.com.':'',
+ fPhone:v=>!v?'Enter your mobile number.':!/^[6-9]\d{9}$/.test(v)?'Enter a 10-digit Indian mobile number starting with 6–9.':'',
+ fEdu:v=>v?'':'Select your education level.',
+ fCourse:v=>v?'':'Select a course.',
+ fPlan:v=>v?'':'Select a pricing plan.'
+};
+Object.keys(rules).forEach(id=>{const el=$('#'+id);el.addEventListener('input',()=>{if(id==='fPhone')el.value=el.value.replace(/\D/g,'');clearErr(el)});el.addEventListener('blur',()=>setErr(el,rules[id](el.value)))});
+$('#fTerms').onchange=e=>{$('.err',e.target.closest('div')).textContent=''};
+form.addEventListener('submit',e=>{
+ e.preventDefault();let first=null,valid=true;
+ Object.keys(rules).forEach(id=>{const el=$('#'+id),m=rules[id](el.value);setErr(el,m);if(m){valid=false;first=first||el}});
+ const t=$('#fTerms');
+ if(!t.checked){valid=false;$('.err',t.closest('div')).textContent='Accept the Terms and Conditions to continue.';first=first||t}
+ const ok=$('#ok');
+ if(!valid){ok.classList.remove('show');first.focus();return}
+ const name=$('#fName').value.trim().split(' ')[0];
+ ok.textContent=`Thank you, ${name}! Your enrollment request for ${$('#fCourse').selectedOptions[0].text} (${$('#fPlan').value}) has been received. We will email you shortly.`;
+ ok.classList.add('show');form.reset();$$('.bad',form).forEach(clearErr);
+ ok.scrollIntoView({behavior:'smooth',block:'nearest'});
+});
+</script>
+</body>
+</html>
